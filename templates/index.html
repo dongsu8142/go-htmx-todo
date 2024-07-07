@@ -1,0 +1,26 @@
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/htmx.org@2.0.0" integrity="sha384-wS5l5IKJBvK6sPTKa2WZ1js3d947pvWXbPJ1OmWfEuxLgeHcEbjUUA5i9V5ZkpCw" crossorigin="anonymous"></script>
+    <title>TODO List</title>
+</head>
+<body>
+    <form hx-swap="beforeend" hx-target="#todo-list" hx-post="/add-todo" hx-on::after-request="this.reset()">
+        <label for="message">New Todo:</label>
+        <input type="text" id="message" name="message" />
+        <button type="submit">Create</button>
+    </form>
+    {{block "todo-list" .}}
+    <ul id="todo-list">
+        {{range .}} {{block "todo-list-element" .}}
+        <li id="todo-list-{{.Id}}">
+            <span>{{.Message}}</span>
+            <button hx-get="/edit-todo/{{.Id}}" hx-target="#todo-list-{{.Id}}">Edit</button>
+            <button hx-target="#todo-list-{{.Id}}" hx-delete="/delete-todo/{{.Id}}" hx-swap="outerHTML">Delete</button>
+        </li>
+        {{end}} {{end}}
+    </ul>
+    {{end}}
+</body>
+</html>

@@ -1,0 +1,5 @@
+<form hx-post="/save-todo" hx-target="#todo-list-{{.Id}}" hx-swap="outerHTML">
+    <input type="hidden" name="id" value="{{.Id}}">
+    <input type="text" name="message" value="{{.Message}}">
+    <button type="submit">Save</button>
+</form>
