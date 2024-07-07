@@ -73,11 +73,11 @@ func main() {
 		templ.ExecuteTemplate(w, "todo-list-element", todo)
 	}
 
-	http.HandleFunc("/", todosHandler)
-	http.HandleFunc("/add-todo", addTodoHandler)
-	http.HandleFunc("/delete-todo/{id}", deleteTodoHandler)
-	http.HandleFunc("/edit-todo/{id}", editTodoHandler)
-	http.HandleFunc("/save-todo", saveTodoHandler)
+	http.HandleFunc("GET /", todosHandler)
+	http.HandleFunc("POST /add-todo", addTodoHandler)
+	http.HandleFunc("DELETE /delete-todo/{id}", deleteTodoHandler)
+	http.HandleFunc("GET /edit-todo/{id}", editTodoHandler)
+	http.HandleFunc("POST /save-todo", saveTodoHandler)
 
 	http.ListenAndServe(fmt.Sprintf(":%s", port), nil)
 }
