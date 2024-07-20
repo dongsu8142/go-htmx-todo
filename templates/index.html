@@ -15,9 +15,16 @@
     <ul id="todo-list">
         {{range .}} {{block "todo-list-element" .}}
         <li id="todo-list-{{.Id}}">
-            <span>{{.Message}}</span>
+            <span>
+                {{ if .Done }}
+                    <del>{{ .Message }}</del>
+                {{ else }}
+                    {{ .Message }}
+                {{ end }}
+            </span>
             <button hx-get="/edit-todo/{{.Id}}" hx-target="#todo-list-{{.Id}}">Edit</button>
             <button hx-target="#todo-list-{{.Id}}" hx-delete="/delete-todo/{{.Id}}" hx-swap="outerHTML">Delete</button>
+            <button hx-post="/done-todo/{{.Id}}" hx-target="#todo-list-{{.Id}}">Done</button>
         </li>
         {{end}} {{end}}
     </ul>

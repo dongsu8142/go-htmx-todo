@@ -11,6 +11,7 @@ import (
 type Todo struct {
 	Id      int
 	Message string
+	Done    bool
 }
 
 func main() {
@@ -20,7 +21,7 @@ func main() {
 	}
 
 	data := map[int]Todo{
-		1: {Id: 1, Message: "Buy Book"},
+		1: {Id: 1, Message: "Buy Book", Done: false},
 	}
 
 	todosHandler := func(w http.ResponseWriter, r *http.Request) {
@@ -73,11 +74,24 @@ func main() {
 		templ.ExecuteTemplate(w, "todo-list-element", todo)
 	}
 
+	doneTodoHandler := func(w http.ResponseWriter, r *http.Request) {
+		id, err := strconv.Atoi(r.PathValue("id"))
+		if err != nil {
+			return
+		}
+		todo := data[id]
+		todo.Done = !todo.Done
+		data[id] = todo
+		templ := template.Must(template.ParseFiles("templates/index.html"))
+		templ.ExecuteTemplate(w, "todo-list-element", todo)
+	}
+
 	http.HandleFunc("GET /", todosHandler)
 	http.HandleFunc("POST /add-todo", addTodoHandler)
 	http.HandleFunc("DELETE /delete-todo/{id}", deleteTodoHandler)
 	http.HandleFunc("GET /edit-todo/{id}", editTodoHandler)
 	http.HandleFunc("POST /save-todo", saveTodoHandler)
+	http.HandleFunc("POST /done-todo/{id}", doneTodoHandler)
 
 	http.ListenAndServe(fmt.Sprintf(":%s", port), nil)
 }
